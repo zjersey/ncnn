@@ -31,6 +31,7 @@ int Embed::load_param(const ParamDict& pd)
     bias_term = pd.get(2, 0);
     weight_data_size = pd.get(3, 0);
     pos_data_size =  pd.get(4, 0);
+    type_data_size = pd.get(5, 0);
     return 0;
 }
 
@@ -40,7 +41,8 @@ int Embed::load_model(const ModelBin& mb)
     if (weight_data.empty())
         return -100;
     pos_data = mb.load(pos_data_size, 0);
-    
+    type_data = mb.load(type_data_size, 0);
+
     if (bias_term)
     {
         bias_data = mb.load(num_output, 1);
@@ -75,6 +77,11 @@ int Embed::forward(const Mat& bottom_blob, Mat& top_blob, const Option& opt) con
         const float* em = (const float*)weight_data + num_output * word_index;
 
         memcpy(outptr, em, num_output * sizeof(float));
+        
+        for (int p = 0; p < num_output; p++){
+            outptr[p] += pos_data[q*num_output + p];
+            outptr[p] += type_data[p]; //only support type_id = 0 for now
+        }
 
         if (bias_term)
         {

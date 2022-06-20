@@ -42,6 +42,7 @@ public:
     Mat weight_data;
     Mat bias_data;
     Mat pos_data;
+    Mat type_data;
 };
 
 } // namespace ncnn
