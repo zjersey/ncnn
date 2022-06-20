@@ -37,10 +37,11 @@ public:
     int bias_term;
 
     int weight_data_size;
-
+    int pos_data_size;
     // model
     Mat weight_data;
     Mat bias_data;
+    Mat pos_data;
 };
 
 } // namespace ncnn

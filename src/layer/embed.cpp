@@ -30,7 +30,7 @@ int Embed::load_param(const ParamDict& pd)
     input_dim = pd.get(1, 0);
     bias_term = pd.get(2, 0);
     weight_data_size = pd.get(3, 0);
-
+    pos_data_size =  pd.get(4, 0);
     return 0;
 }
 
@@ -39,7 +39,8 @@ int Embed::load_model(const ModelBin& mb)
     weight_data = mb.load(weight_data_size, 0);
     if (weight_data.empty())
         return -100;
-
+    pos_data = mb.load(pos_data_size, 0);
+    
     if (bias_term)
     {
         bias_data = mb.load(num_output, 1);
