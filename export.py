@@ -1,3 +1,4 @@
+from os import XATTR_CREATE
 import transformers
 from transformers import (
     BertForSequenceClassification,
@@ -8,14 +9,6 @@ import torch
 from transformers.convert_graph_to_onnx import convert
 from pathlib import Path
 import struct
-# model = AutoModelForImageClassification.from_pretrained(
-#     './beans_outputs'
-# )
-
-# for i, p in enumerate(model.parameters()):
-#     print(p)
-#     if i>3:
-#         break
 
 # class ConvNet(torch.nn.Module):
 #     def __init__(self) -> None:
@@ -32,30 +25,28 @@ import struct
 # torch.onnx.export(net, x, 'convnet.onnx')
 
 model = BertModel.from_pretrained('bert-base-uncased').eval()
-# model.load_state_dict(torch.load('../bert.pt'))
-# sentence = ["cat is a lovely girl."]
-# tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
-# inputs = tokenizer(sentence, return_tensors="pt", padding=True)
-# print(inputs)
-# outputs = model(**inputs) #0.1520, 0.2987
-# print(outputs)
-# print(outputs[0].size())
-# print(model.embeddings.word_embeddings.weight.data)
 
-# data = model.embeddings.word_embeddings.weight.data.view(-1)
+def print_hf_out():
+    sentence = ["cat is a lovely girl."]
+    tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
+    inputs = tokenizer(sentence, return_tensors="pt", padding=True)
+    print(inputs)
+    outputs = model(**inputs)
 
+def write_bin():
+    ids_load_by_1 = set([6, 8, 10, 12, 16, 18])
+    with open('zzx.bin', "wb") as fw:
+        for i, (k, v) in enumerate(model.named_parameters()):
+            if i > 20:
+                break
+            lens = 0
+            if i not in ids_load_by_1:
+                fw.write(struct.pack('i', 0))
+            for x in v.data.view(-1):
+                s = struct.pack('f', x)
+                fw.write(s)
+                lens += 1
+            print(f"{i}, {lens}")
 
-with open('../zzx.bin', "wb") as fw:
-    for i, (k, v) in enumerate(model.named_parameters()):
-        if i > 2:
-            break
-        lens = 0
-        fw.write(struct.pack('i', 0))
-        for x in v.view(-1):
-            s = struct.pack('f', i)
-            fw.write(s)
-            lens += 1
-        print(f"{i}, {lens}")
-
-# x = torch.LongTensor([[101, 4937, 2003, 1037, 8403, 2611, 1012,  102]])
-# y = model.embeddings.word_embeddings(x)
+# write_bin()
+print_hf_out()

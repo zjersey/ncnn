@@ -1,4 +1,15 @@
 7767517
-2 2
-Input       input     0 1 input
-Embed       emb       1 1 input token_emb 0=768 1=30522 3=23440896
+13 15
+Input       Input     0 1 input
+Embed       Emb       1 1 input emb_ln_input 0=768 1=30522 3=23440896 4=393216 5=1536
+LayerNorm   Ln_emb    1 1 emb_ln_input qkv_input_l0 0=768 1=1.000000e-06
+Split       Split_0_l0   1 2 qkv_input_l0 qkv_split_0_l0 qkv_split_1_l0
+MultiHeadAttention MultiHeadAttention_l0    3 1 qkv_split_0_l0 qkv_split_0_l0 qkv_split_0_l0 attn_l0 0=768 1=12 2=589824
+BinaryOp    Res_0_l0  2 1 qkv_split_1_l0 attn_l0 res_0_l0
+LayerNorm   Ln_attn   1 1 res_0_l0 ffn_input_l0 0=768 1=1.000000e-06
+Split       Split_1_l0   1 2 ffn_input_l0 ffn_split_0_l0 ffn_split_1_l0
+InnerProduct     Fc0_l0                  1 1 ffn_split_0_l0 fc0_l0 0=3072 1=1 2=2359296
+GELU             Gelu_l0                  1 1 fc0_l0 gelu_l0 0=1
+InnerProduct     Fc1_l0                  1 1 gelu_l0 fc1_l0 0=768 1=1 2=2359296
+BinaryOp    Res_1_l0  2 1 ffn_split_1_l0 fc1_l0 res_1_l0
+LayerNorm   Ln_ffn   1 1 res_1_l0 qkv_input_l1 0=768 1=1.000000e-06

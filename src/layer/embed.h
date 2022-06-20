@@ -38,6 +38,7 @@ public:
 
     int weight_data_size;
     int pos_data_size;
+    int type_data_size;
     // model
     Mat weight_data;
     Mat bias_data;

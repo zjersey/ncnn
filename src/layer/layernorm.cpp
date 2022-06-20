@@ -38,11 +38,11 @@ int LayerNorm::load_model(const ModelBin& mb)
     if (affine == 0)
         return 0;
 
-    gamma_data = mb.load(affine_size, 1);
+    gamma_data = mb.load(affine_size, 0);
     if (gamma_data.empty())
         return -100;
 
-    beta_data = mb.load(affine_size, 1);
+    beta_data = mb.load(affine_size, 0);
     if (beta_data.empty())
         return -100;
 
