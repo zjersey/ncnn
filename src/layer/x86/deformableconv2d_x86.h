@@ -12,10 +12,30 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the
 // specific language governing permissions and limitations under the License.
 
-#include "ir.h"
+#ifndef LAYER_DEFORMABLECONV2D_X86_H
+#define LAYER_DEFORMABLECONV2D_X86_H
 
-namespace pnnx {
+#include "deformableconv2d.h"
 
-void fuse_cat_stack_tensors(Graph& graph);
+namespace ncnn {
 
-} // namespace pnnx
+class DeformableConv2D_x86 : virtual public DeformableConv2D
+{
+public:
+    DeformableConv2D_x86();
+
+    virtual int create_pipeline(const Option& opt);
+    virtual int destroy_pipeline(const Option& opt);
+
+    virtual int forward(const std::vector<Mat>& bottom_blobs, std::vector<Mat>& top_blobs, const Option& opt) const;
+
+public:
+    Mat weight_data_t;
+
+    Layer* inner_product;
+    Layer* permute;
+};
+
+} // namespace ncnn
+
+#endif // LAYER_DEFORMABLECONV2D_X86_H
