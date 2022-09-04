@@ -136,3 +136,4 @@ ncnn_add_layer_test(UnaryOp)
 ncnn_add_layer_test(Yolov3DetectionOutput)
 
 ncnn_add_test(zzx)
+ncnn_add_test(i8mm)
