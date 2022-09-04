@@ -1,10 +1,11 @@
 #include "testutil.h"
 #include "layer/arm/convolution_sgemm_int8.h"
-int main(int argc, const char **argv) {
-    int w = 4, h=4, c=4;
-    int8_t *data_a = (int8_t*)malloc(w * h * c * sizeof(int8_t));
-    for (int i=0; i<w * h * c; ++i) data_a[i] = (int8_t)(i+1);
-    ncnn::Mat a(w, h , c, data_a, 1, 1);
+int main(int argc, const char** argv)
+{
+    int w = 4, h = 4, c = 4;
+    int8_t* data_a = (int8_t*)malloc(w * h * c * sizeof(int8_t));
+    for (int i = 0; i < w * h * c; ++i) data_a[i] = (int8_t)(i + 1);
+    ncnn::Mat a(w, h, c, data_a, 1, 1);
     ncnn::Mat kernel(2, 2, 4, data_a);
     ncnn::Mat output(2, 2);
     // printf("total: %d, %d\n", a.total(), kernel.total());

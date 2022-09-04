@@ -42,18 +42,18 @@ static void im2col_sgemm_int8_neon(const Mat& bottom_im2col, Mat& top_blob, cons
 //     }
 // #endif
 // #endif
-# if __aarch64__
+#if __aarch64__
     printf("__aarch64__\n");
-#endif 
-# if __ARM_FEATURE_DOTPROD
+#endif
+#if __ARM_FEATURE_DOTPROD
     printf("__ARM_FEATURE_DOTPROD\n");
-#endif 
+#endif
 #if __ARM_FEATURE_MATMUL_INT8
     printf("__ARM_FEATURE_MATMUL_INT8\n");
 #endif
 #if __ARM_NEON
     printf("__ARM_NEON\n");
-#endif 
+#endif
 
     const int size = bottom_im2col.w;
     const int maxk = bottom_im2col.h;
@@ -113,7 +113,7 @@ static void im2col_sgemm_int8_neon(const Mat& bottom_im2col, Mat& top_blob, cons
     {
         if (size >= 4)
             tmp.create(4 * maxk, inch / 4 + inch % 4, size / 4 + (size % 4) / 2 + size % 2, 4u, 4, opt.workspace_allocator);
-            // tmp.create(16, 1, 1, 4, 4)
+        // tmp.create(16, 1, 1, 4, 4)
         else if (size >= 2)
             tmp.create(2 * maxk, inch / 4 + inch % 4, size / 2 + size % 2, 4u, 4, opt.workspace_allocator);
         else
@@ -4132,23 +4132,23 @@ static void im2col_sgemm_int8_neon(const Mat& bottom_im2col, Mat& top_blob, cons
 
 static void convolution_im2col_sgemm_transform_kernel_int8_neon(const Mat& _kernel, Mat& kernel_tm, int inch, int outch, int kernel_w, int kernel_h)
 {
-// #if !(__ARM_FEATURE_MATMUL_INT8 || __ARM_FEATURE_DOTPROD)
-// #if NCNN_RUNTIME_CPU && NCNN_ARM84I8MM && __aarch64__ && !__ARM_FEATURE_MATMUL_INT8
-//     if (ncnn::cpu_support_arm_i8mm())
-//     {
-//         convolution_im2col_sgemm_transform_kernel_int8_neon_i8mm(_kernel, kernel_tm, inch, outch, kernel_w, kernel_h);
-//         return;
-//     }
-// #endif
+    // #if !(__ARM_FEATURE_MATMUL_INT8 || __ARM_FEATURE_DOTPROD)
+    // #if NCNN_RUNTIME_CPU && NCNN_ARM84I8MM && __aarch64__ && !__ARM_FEATURE_MATMUL_INT8
+    //     if (ncnn::cpu_support_arm_i8mm())
+    //     {
+    //         convolution_im2col_sgemm_transform_kernel_int8_neon_i8mm(_kernel, kernel_tm, inch, outch, kernel_w, kernel_h);
+    //         return;
+    //     }
+    // #endif
 
-// #if NCNN_RUNTIME_CPU && NCNN_ARM82DOT && __aarch64__ && !__ARM_FEATURE_DOTPROD
-//     if (ncnn::cpu_support_arm_asimddp())
-//     {
-//         convolution_im2col_sgemm_transform_kernel_int8_neon_asimddp(_kernel, kernel_tm, inch, outch, kernel_w, kernel_h);
-//         return;
-//     }
-// #endif
-// #endif
+    // #if NCNN_RUNTIME_CPU && NCNN_ARM82DOT && __aarch64__ && !__ARM_FEATURE_DOTPROD
+    //     if (ncnn::cpu_support_arm_asimddp())
+    //     {
+    //         convolution_im2col_sgemm_transform_kernel_int8_neon_asimddp(_kernel, kernel_tm, inch, outch, kernel_w, kernel_h);
+    //         return;
+    //     }
+    // #endif
+    // #endif
 
     const int maxk = kernel_w * kernel_h;
 
@@ -4525,7 +4525,8 @@ static void convolution_im2col_sgemm_int8_neon(const Mat& bottom_blob, Mat& top_
     im2col_sgemm_int8_neon(bottom_im2col, top_blob, kernel, opt);
 
     printf("final out:\n");
-    for (size_t i=0; i<top_blob.total(); ++i) {
+    for (size_t i = 0; i < top_blob.total(); ++i)
+    {
         printf("%d, ", ((int*)top_blob.data)[i]);
     }
     printf("\n");
